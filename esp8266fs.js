@@ -156,11 +156,11 @@ function toHex(decimal, width = 4)
 
 //------------------------------------------------------------------------------
 
-function makeOsPath(dir)
+function makeOsPath(dir, escape = true)
 {
     dir = dir.replace(/\\/g, "/");
 
-    if (dir.indexOf(" ") != -1)
+    if (escape && (dir.indexOf(" ") != -1))
         dir = `"${dir}"`;
 
     return dir;
@@ -756,7 +756,7 @@ function packSpiffs(mkspiffs, dataPath, spiffsOptions, spiffsImage) {
     logSpiffs(`block  : ${spiBlock}`);
 
     runCommand(
-        makeOsPath(mkspiffs),
+        makeOsPath(mkspiffs, false),
         makeMkspiffsArgs([
             "--create", makeOsPath(dataPath),
             "--size", dataSize,
@@ -785,7 +785,7 @@ function unpackSpiffs(mkspiffs, dataPath, spiffsOptions, spiffsImage) {
     logSpiffs(`block  : ${spiBlock}`);
 
     runCommand(
-        makeOsPath(mkspiffs),
+        makeOsPath(mkspiffs, false),
         makeMkspiffsArgs([
             "--unpack", makeOsPath(dataPath),
             "--size", dataSize,
@@ -810,7 +810,7 @@ function listSpiffs(mkspiffs, spiffsOptions, spiffsImage) {
     logSpiffs(`block  : ${spiBlock}`);
 
     runCommand(
-        makeOsPath(mkspiffs),
+        makeOsPath(mkspiffs, false),
         makeMkspiffsArgs([
             "--list",
             "--page", spiPage,
@@ -834,7 +834,7 @@ function visualizeSpiffs(mkspiffs, spiffsOptions, spiffsImage) {
     logSpiffs(`block  : ${spiBlock}`);
 
     runCommand(
-        makeOsPath(mkspiffs),
+        makeOsPath(mkspiffs, false),
         makeMkspiffsArgs([
             "--visualize",
             "--page", spiPage,
@@ -929,7 +929,7 @@ function _uploadSpiffsEspTool(esptool, commPort, spiffsImage, spiffsOptions) {
     if (verbosity)
         args.unshift(`-${verbosity}`);
 
-    runCommand(makeOsPath(esptool), args);
+    runCommand(makeOsPath(esptool, false), args);
 }
 
 //------------------------------------------------------------------------------
@@ -1022,7 +1022,7 @@ function _uploadSpiffsEspToolPy(esptool, commPort, spiffsImage, spiffsOptions, t
 
     args.push(uploadAddress, makeOsPath(spiffsImage));
 
-    runCommand(makeOsPath(python), args);
+    runCommand(makeOsPath(python, false), args);
 }
 
 //------------------------------------------------------------------------------
@@ -1101,7 +1101,7 @@ function _downloadSpiffsEspToolPy(esptool, commPort, spiffsImage, spiffsOptions,
 
     args.push(downloadAddress, makeOsPath(spiffsImage));
 
-    runCommand(makeOsPath(python), args);
+    runCommand(makeOsPath(python, false), args);
 }
 //------------------------------------------------------------------------------
 
@@ -1189,7 +1189,7 @@ function uploadSpiffsOta(espota, ip, spiffsImage) {
         "--file",   makeOsPath(spiffsImage)
     );
 
-    runCommand(makeOsPath(python), args);
+    runCommand(makeOsPath(python, false), args);
 }
 
 // #endregion
